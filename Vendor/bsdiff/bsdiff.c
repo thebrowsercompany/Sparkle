@@ -84,7 +84,8 @@ static off_t search(off_t *I, u_char *old, off_t oldsize,
     }
 
     x = st + (en - st)/2;
-    /* Ported from ChromiumOS project: https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/58146f74abd6b1b69693943195f37f4ac6a6acef%5E%21/#F0 */
+    /* Modification ported from ChromiumOS project:
+     * https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/58146f74abd6b1b69693943195f37f4ac6a6acef%5E%21/#F0 */
     if (memcmp(old + I[x], new, (size_t)(MIN(oldsize - I[x], newsize))) <= 0) {
         return search(I, old, oldsize, new, newsize, x, en, pos);
     } else {
@@ -213,7 +214,8 @@ int bsdiff(int argc, char *argv[])
     lastoffset = 0;
     while (scan < newsize) {
         oldscore = 0;
-        /* Ported from ChromiumOS project: https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/a055996c743add7a9558839276fd1e4994d16bd3%5E%21/#F0 */
+        /* Modification ported from ChromiumOS project:
+         * https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/a055996c743add7a9558839276fd1e4994d16bd3%5E%21/#F0 */
         /* If we come across a large block of data that only differs
          * by less than 8 bytes, this loop will take a long time to
          * go past that block of data. We need to track the number of
@@ -251,7 +253,8 @@ int bsdiff(int argc, char *argv[])
                 (old[scan + lastoffset] == new[scan]))
                 oldscore--;
 
-            /* Ported from ChromiumOS project: https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/426e4aa1cbeb3c8a73002047d7a796ca8e5e17d4%5E%21/#F0 */
+            /* Modification ported from ChromiumOS project:
+             * https://chromium.googlesource.com/chromiumos/third_party/bsdiff/+/426e4aa1cbeb3c8a73002047d7a796ca8e5e17d4%5E%21/#F0 */
             const off_t fuzz = 8;
             if (prev_len - fuzz <= len && len <= prev_len &&
                 prev_oldscore - fuzz <= oldscore &&
