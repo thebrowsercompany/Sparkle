@@ -5,7 +5,7 @@ import PackageDescription
 let version = "2.8.1-bcnpy-beta1"
 // Tag is required to point towards the right asset. SPM requires the tag to follow semantic versioning to be able to resolve it.
 let tag = "2.8.1-bcnpy-beta1"
-let checksum = "d41d31618bf8978561b236ffaaa7194bc244725c1cb10c0132117253c27337af"
+let checksum = "Xd41d31618bf8978561b236ffaaa7194bc244725c1cb10c0132117253c27337af"
 let url = "https://github.com/thebrowsercompany/Sparkle/releases/download/\(tag)/Sparkle-for-Swift-Package-Manager.zip"
 
 let package = Package(
