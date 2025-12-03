@@ -27,6 +27,7 @@ jobs:
     runs-on: ${{ matrix.macos }}
 
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
