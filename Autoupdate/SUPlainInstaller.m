@@ -330,16 +330,28 @@
     SUHost *updateHost = [[SUHost alloc] initWithBundle:bundle];
     NSString *updateVersion = [updateHost objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleVersionKey ofClass:NSString.class];
     
-    id<SUVersionComparison> comparator = [[SUStandardVersionComparator alloc] init];
-    if (!updateVersion || [comparator compareVersion:hostVersion toVersion:updateVersion] == NSOrderedDescending) {
-        
-        if (error != NULL) {
-            NSString *errorMessage = [NSString stringWithFormat:@"For security reasons, updates that downgrade version of the application are not allowed. Refusing to downgrade app from version %@ to %@. Aborting update.", hostVersion, updateVersion];
+    // BCNY: Allow downgrades if BCNYReleaseType equals to Canary or Prototype and CFBundleIdentifier equals to "company.thebrowser.diadev" or "company.thebrowser.dia":
+    BOOL isDia = [bundle.bundleIdentifier isEqualToString:@"company.thebrowser.dia"] || [bundle.bundleIdentifier isEqualToString:@"company.thebrowser.diadev"];
+    NSString *releaseType = [_host.bundle objectForInfoDictionaryKey:@"BCNYReleaseType"];
+    BOOL isDev = [releaseType isEqualToString:@"Development"];
+    BOOL isCanary = [releaseType isEqualToString:@"Canary"];
+    BOOL isPrototype = [releaseType isEqualToString:@"Prototype"];
+
+    BOOL allowDowngrades = (isDev || isCanary || isPrototype) && isDia;
+    // END BCNY
+
+    if (!allowDowngrades) {
+        id<SUVersionComparison> comparator = [[SUStandardVersionComparator alloc] init];
+        if (!updateVersion || [comparator compareVersion:hostVersion toVersion:updateVersion] == NSOrderedDescending) {
+
+            if (error != NULL) {
+                NSString *errorMessage = [NSString stringWithFormat:@"For security reasons, updates that downgrade version of the application are not allowed. Refusing to downgrade app from version %@ to %@. Aborting update.", hostVersion, updateVersion];
+
+                *error = [NSError errorWithDomain:SUSparkleErrorDomain code:SUDowngradeError userInfo:@{ NSLocalizedDescriptionKey: errorMessage }];
+            }
             
-            *error = [NSError errorWithDomain:SUSparkleErrorDomain code:SUDowngradeError userInfo:@{ NSLocalizedDescriptionKey: errorMessage }];
+            return NO;
         }
-        
-        return NO;
     }
     
     SUFileManager *fileManager = [[SUFileManager alloc] init];

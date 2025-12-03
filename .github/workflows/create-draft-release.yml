@@ -30,12 +30,15 @@ jobs:
   release:
     name: "Publish binaries for release"
     runs-on: macos-15
+    permissions:
+      pull-requests: write
+      contents: write
+
 
     steps:
       - name: "Checkout sources"
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
           submodules: true
           fetch-depth: 0
           
@@ -78,11 +81,11 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
 
       - name: "Push the updated package description"
-        env:
-            GITHUB_TOKEN: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
+        # env:
+        #     GITHUB_TOKEN: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
         run: git push
 
       - name: "Draft a release"
@@ -94,7 +97,7 @@ jobs:
           name: "${{ github.event.inputs.marketingVersion }}${{ github.event.inputs.prereleaseSuffix }}"
           tag_name: "${{ github.event.inputs.marketingVersion }}${{ github.event.inputs.prereleaseSuffix }}"
           fail_on_unmatched_files: true
-          token: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
+          # token: ${{ secrets.BOT_PERSONAL_ACCESS_TOKEN }}
           body_path: latest-changes.txt
           files: |
             build/Build/Products/Release/Sparkle-*.tar.xz
