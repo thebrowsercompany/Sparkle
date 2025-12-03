@@ -337,10 +337,7 @@
     BOOL isCanary = [releaseType isEqualToString:@"Canary"];
     BOOL isPrototype = [releaseType isEqualToString:@"Prototype"];
 
-    // TODO: TEST: check if it starts with "PR-" - remove this once it has been tested!
-    BOOL isPR = [releaseType hasPrefix:@"PR-"];
-
-    BOOL allowDowngrades = (isDev || isCanary || isPrototype || isPR) && isDia;
+    BOOL allowDowngrades = (isDev || isCanary || isPrototype) && isDia;
     // END BCNY
 
     if (!allowDowngrades) {
